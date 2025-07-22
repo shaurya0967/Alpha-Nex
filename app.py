@@ -7,8 +7,8 @@ from flask_mail import Mail
 from sqlalchemy.orm import DeclarativeBase
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-# Set up logging
-logging.basicConfig(level=logging.DEBUG)
+# Configure application logging for better debugging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class Base(DeclarativeBase):
     pass

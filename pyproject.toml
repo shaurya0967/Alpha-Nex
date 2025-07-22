@@ -1,7 +1,9 @@
+# Alpha Nex - AI Training Data Platform Configuration
+# Python project dependencies and metadata for the Alpha Nex platform
 [project]
 name = "repl-nix-workspace"
 version = "0.1.0"
-description = "Add your description here"
+description = "Alpha Nex - AI Training Data Collection and Review Platform"
 requires-python = ">=3.11"
 dependencies = [
     "email-validator>=2.2.0",

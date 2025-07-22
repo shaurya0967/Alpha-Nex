@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+"""
+Alpha Nex Database Models
+Complete database schema for the AI training data collection platform
+"""
 from datetime import datetime, timezone
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash

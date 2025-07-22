@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+"""
+Alpha Nex Application Routes
+Complete routing system for authentication, uploads, reviews, and administration
+"""
 import os
 import hashlib
 import secrets

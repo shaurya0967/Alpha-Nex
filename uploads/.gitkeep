@@ -1,2 +1,4 @@
+# Alpha Nex Upload Directory Placeholder
 # This file ensures the uploads directory is tracked by git
-# The uploads directory is needed for file storage
+# The uploads directory is essential for user-uploaded content storage
+# Files uploaded through the platform are stored here securely

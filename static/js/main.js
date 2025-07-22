@@ -1,4 +1,8 @@
-// Alpha Nex Main JavaScript
+/**
+ * Alpha Nex Main JavaScript
+ * Core client-side functionality for the AI training data platform
+ * Handles form interactions, validation, and user experience enhancements
+ */
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize tooltips

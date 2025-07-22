@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+"""
+Alpha Nex Utility Functions
+Essential helper functions for email verification, file validation, and platform utilities
+"""
 import secrets
 from flask import current_app
 from flask_mail import Message
