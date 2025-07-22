@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Agreement - Alpha Nex{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h3><i class="fas fa-file-signature me-2 text-primary"></i>Content Upload Agreement</h3>
+                    <p class="text-muted mb-0">Please read and acknowledge the following terms before uploading content</p>
+                </div>
+                <div class="card-body">
+                    <!-- Legal Agreement Content -->
+                    <div class="legal-content">
+                        <div class="legal-section">
+                            <h4 class="text-primary">1. Content Ownership Declaration</h4>
+                            <p>By proceeding with this upload, you hereby declare and warrant that:</p>
+                            <ul>
+                                <li>You are the original creator and legal owner of the content being uploaded, OR</li>
+                                <li>You have obtained proper authorization from the copyright holder(s), OR</li>
+                                <li>The content is in the public domain or covered by a license that permits this use</li>
+                                <li>You have the legal right to grant the licenses specified in this agreement</li>
+                            </ul>
+                        </div>
+
+                        <div class="legal-section">
+                            <h4 class="text-primary">2. AI Training License Grant</h4>
+                            <p><strong>By uploading content, you grant Alpha Nex the following rights:</strong></p>
+                            <ul>
+                                <li><strong>Worldwide License:</strong> The right to use your content globally without geographic restrictions</li>
+                                <li><strong>Royalty-Free:</strong> No payments or royalties are owed for the use of your content in AI training</li>
+                                <li><strong>Perpetual Duration:</strong> This license does not expire and continues indefinitely</li>
+                                <li><strong>Irrevocable:</strong> You cannot withdraw or cancel this license once granted</li>
+                                <li><strong>Sublicensable:</strong> We may grant similar rights to our research and commercial partners</li>
+                            </ul>
+                        </div>
+
+                        <div class="legal-section">
+                            <h4 class="text-primary">3. Permitted Uses of Your Content</h4>
+                            <p>Your uploaded content may be used for the following purposes:</p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Machine Learning Applications:</h6>
+                                    <ul>
+                                        <li>Training neural networks and AI models</li>
+                                        <li>Developing natural language processing systems</li>
+                                        <li>Computer vision and image recognition research</li>
+                                        <li>Audio processing and speech recognition</li>
+                                        <li>Code analysis and programming assistance</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Research and Development:</h6>
+                                    <ul>
+                                        <li>Academic research and publication</li>
+                                        <li>Commercial AI product development</li>
+                                        <li>Algorithm improvement and optimization</li>
+                                        <li>Benchmark dataset creation</li>
+                                        <li>Quality assessment and validation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="legal-section">
+                            <h4 class="text-primary">4. Content Processing and Modification</h4>
+                            <p>We reserve the right to process your content as follows:</p>
+                            <ul>
+                                <li><strong>Format Conversion:</strong> Converting files to different formats for compatibility</li>
+                                <li><strong>Quality Enhancement:</strong> Improving audio, video, or image quality using automated tools</li>
+                                <li><strong>Segmentation:</strong> Breaking content into smaller segments for training purposes</li>
+                                <li><strong>Annotation:</strong> Adding labels, tags, or metadata to enhance training value</li>
+                                <li><strong>Anonymization:</strong> Removing or obscuring personal information to protect privacy</li>
+                                <li><strong>Augmentation:</strong> Creating variations or derivatives for expanded training datasets</li>
+                            </ul>
+                        </div>
+
+                        <div class="legal-section">
+                            <h4 class="text-primary">5. Third-Party Distribution</h4>
+                            <p>Your content may be distributed to authorized third parties including:</p>
+                            <ul>
+                                <li><strong>Research Institutions:</strong> Universities and academic research organizations</li>
+                                <li><strong>Technology Companies:</strong> AI and machine learning companies for product development</li>
+                                <li><strong>Government Agencies:</strong> For research, security, or public benefit purposes</li>
+                                <li><strong>Open Source Communities:</strong> For publicly available research datasets</li>
+                            </ul>
+                            <p><em>All third-party recipients will be bound by appropriate data use agreements and ethical guidelines.</em></p>
+                        </div>
+
+                        <div class="legal-section">
+                            <h4 class="text-primary">6. Quality and Content Standards</h4>
+                            <p>By uploading content, you acknowledge that:</p>
+                            <ul>
+                                <li>Content must comply with our <a href="{{ url_for('main.content_policy') }}" target="_blank">Content Policy</a></li>
+                                <li>Content should be of reasonable technical quality and free from corruption</li>
+                                <li>Duplicate or near-duplicate content will be automatically rejected</li>
+                                <li>False, misleading, or malicious content is strictly prohibited</li>
+                                <li>Content containing personal information of others requires their consent</li>
+                            </ul>
+                        </div>
+
+                        <div class="legal-section">
+                            <h4 class="text-primary">7. Intellectual Property Protections</h4>
+                            <ul>
+                                <li><strong>Your Rights:</strong> You retain ownership of your original content</li>
+                                <li><strong>Attribution:</strong> We will maintain records of content sources where practical</li>
+                                <li><strong>Infringement:</strong> We respond promptly to valid intellectual property claims</li>
+                                <li><strong>Third-Party Rights:</strong> You must respect and protect third-party intellectual property rights</li>
+                            </ul>
+                        </div>
+
+                        <div class="legal-section">
+                            <h4 class="text-primary">8. Privacy and Data Protection</h4>
+                            <ul>
+                                <li>Personal information in content may be anonymized or removed</li>
+                                <li>Privacy protection measures comply with applicable data protection laws</li>
+                                <li>Content processing follows our <a href="{{ url_for('main.privacy') }}" target="_blank">Privacy Policy</a></li>
+                                <li>You are responsible for obtaining consent from individuals appearing in your content</li>
+                            </ul>
+                        </div>
+
+                        <div class="legal-section">
+                            <h4 class="text-primary">9. Compensation and Rewards</h4>
+                            <ul>
+                                <li>XP points are awarded for approved, quality content</li>
+                                <li>Additional rewards may be provided for exceptional contributions</li>
+                                <li>Compensation does not create additional obligations for us</li>
+                                <li>Violation of terms may result in forfeiture of rewards</li>
+                            </ul>
+                        </div>
+
+                        <div class="legal-section">
+                            <h4 class="text-primary">10. Legal Compliance</h4>
+                            <ul>
+                                <li>Content must comply with all applicable laws and regulations</li>
+                                <li>You are solely responsible for legal compliance of your uploads</li>
+                                <li>We reserve the right to remove content for legal compliance</li>
+                                <li>You will indemnify us against claims arising from your content</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Consent Section -->
+                    <div class="consent-section mt-4">
+                        <h5 class="text-warning"><i class="fas fa-exclamation-triangle me-2"></i>Required Legal Consent</h5>
+                        <p class="consent-text">
+                            <strong>IMPORTANT:</strong> This agreement is legally binding and irrevocable. 
+                            Once you provide consent and upload content, you cannot withdraw the license 
+                            granted for AI training purposes, even if you delete your account or the content.
+                        </p>
+                        
+                        <form method="POST" action="{{ url_for('upload.consent') }}">
+                            <div class="consent-checkbox">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="consent" name="consent" required>
+                                    <label class="form-check-label" for="consent">
+                                        <strong>
+                                            I have read, understood, and agree to this Content Upload Agreement. 
+                                            I confirm that I own the content I will upload and consent to its use 
+                                            for AI training purposes as described above. I understand this license 
+                                            is irrevocable and perpetual.
+                                        </strong>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary me-3">
+                                    <i class="fas fa-arrow-left me-2"></i>Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary" id="submit-btn" disabled>
+                                    <i class="fas fa-check me-2"></i>I Agree - Proceed to Upload
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Additional Legal Information -->
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-file-contract fa-2x text-primary mb-3"></i>
+                            <h6>Terms of Service</h6>
+                            <p class="text-muted small">Review our complete terms and conditions</p>
+                            <a href="{{ url_for('main.terms') }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                Read Terms
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-shield-alt fa-2x text-primary mb-3"></i>
+                            <h6>Privacy Policy</h6>
+                            <p class="text-muted small">Understand how we protect your privacy</p>
+                            <a href="{{ url_for('main.privacy') }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                Read Privacy
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="fas fa-gavel fa-2x text-primary mb-3"></i>
+                            <h6>Content Policy</h6>
+                            <p class="text-muted small">Learn about acceptable content standards</p>
+                            <a href="{{ url_for('main.content_policy') }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                Read Policy
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const consentCheckbox = document.getElementById('consent');
+    const submitButton = document.getElementById('submit-btn');
+    
+    function toggleSubmitButton() {
+        submitButton.disabled = !consentCheckbox.checked;
+    }
+    
+    consentCheckbox.addEventListener('change', toggleSubmitButton);
+    toggleSubmitButton(); // Initialize
+});
+</script>
+{% endblock %}

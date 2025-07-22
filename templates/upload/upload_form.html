@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Content - Alpha Nex{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <!-- Upload Form -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4><i class="fas fa-upload me-2 text-primary"></i>Upload Content</h4>
+                    <p class="text-muted mb-0">Share your content to contribute to AI training datasets</p>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                        <!-- File Upload Area -->
+                        <div class="mb-4">
+                            <label for="file" class="form-label">Select File</label>
+                            <div class="upload-area" onclick="document.getElementById('file').click()">
+                                <i class="fas fa-cloud-upload-alt fa-3x text-primary mb-3"></i>
+                                <h5>Click to select a file or drag and drop</h5>
+                                <p class="text-muted">
+                                    Supported formats: Video (MP4, AVI, MOV), Audio (MP3, WAV), 
+                                    Documents (PDF, TXT), Code (PY, JS, HTML, CSS, JSON, XML)
+                                </p>
+                                <p class="text-warning">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Maximum file size: 500MB per upload
+                                </p>
+                            </div>
+                            <input type="file" class="form-control d-none" id="file" name="file" required 
+                                   accept=".mp4,.avi,.mov,.mp3,.wav,.pdf,.txt,.py,.js,.html,.css,.json,.xml">
+                            <div class="invalid-feedback">
+                                Please select a file to upload.
+                            </div>
+                        </div>
+
+                        <!-- File Information Display -->
+                        <div id="file-info" class="alert alert-info d-none mb-4">
+                            <!-- File details will be populated by JavaScript -->
+                        </div>
+
+                        <!-- Content Description -->
+                        <div class="mb-4">
+                            <label for="description" class="form-label">Content Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" 
+                                      placeholder="Describe your content, its purpose, and any relevant details that would help reviewers assess its quality..."></textarea>
+                            <div class="form-text">
+                                Optional but recommended. Detailed descriptions help reviewers understand 
+                                your content and may result in better ratings.
+                            </div>
+                        </div>
+
+                        <!-- Legal Consent Confirmation -->
+                        <div class="consent-section mb-4">
+                            <h6 class="text-warning"><i class="fas fa-exclamation-triangle me-2"></i>Final Consent Confirmation</h6>
+                            <div class="consent-text">
+                                <p>Before uploading, please confirm you understand:</p>
+                                <ul class="small">
+                                    <li>You own this content or have permission to upload it</li>
+                                    <li>You consent to its use for AI training purposes</li>
+                                    <li>The license granted is irrevocable and perpetual</li>
+                                    <li>Content will be reviewed by community members</li>
+                                    <li>Duplicate content will be automatically rejected</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="final_consent" name="final_consent" required>
+                                <label class="form-check-label" for="final_consent">
+                                    <strong>I confirm my consent and understanding of the upload terms</strong>
+                                </label>
+                                <div class="invalid-feedback">
+                                    You must confirm your consent before uploading.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg" id="upload-btn" disabled>
+                                <i class="fas fa-upload me-2"></i>Upload Content
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Information Sidebar -->
+        <div class="col-lg-4">
+            <!-- Daily Limit Information -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6><i class="fas fa-chart-pie me-2"></i>Daily Upload Limit</h6>
+                </div>
+                <div class="card-body">
+                    <div class="text-center">
+                        <h4 class="text-primary">{{ "%.1f"|format(remaining_mb) }} MB</h4>
+                        <p class="text-muted">Remaining today</p>
+                    </div>
+                    <div class="upload-progress">
+                        {% set used_percentage = ((500 - remaining_mb) / 500 * 100) %}
+                        <div class="upload-progress-bar" style="width: {{ used_percentage }}%"></div>
+                    </div>
+                    <div class="d-flex justify-content-between small text-muted mt-2">
+                        <span>Used: {{ "%.1f"|format(500 - remaining_mb) }} MB</span>
+                        <span>Limit: 500 MB</span>
+                    </div>
+                    <p class="small text-muted mt-3 mb-0">
+                        Upload limits reset daily at midnight UTC. High-quality content earns more XP!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Upload Tips -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6><i class="fas fa-lightbulb me-2"></i>Upload Tips</h6>
+                </div>
+                <div class="card-body">
+                    <div class="small">
+                        <h6 class="text-success">For Better Ratings:</h6>
+                        <ul>
+                            <li>Upload original, unique content</li>
+                            <li>Ensure good technical quality</li>
+                            <li>Provide detailed descriptions</li>
+                            <li>Choose appropriate file formats</li>
+                            <li>Respect intellectual property rights</li>
+                        </ul>
+                        
+                        <h6 class="text-warning mt-3">Avoid:</h6>
+                        <ul>
+                            <li>Duplicate or similar content</li>
+                            <li>Poor quality files</li>
+                            <li>Content you don't own</li>
+                            <li>Prohibited or harmful material</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- XP Information -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6><i class="fas fa-star me-2"></i>XP & Rewards</h6>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <h4 class="text-success">{{ current_user.xp }}</h4>
+                        <p class="text-muted">Your Current XP</p>
+                    </div>
+                    <div class="small">
+                        <p><strong>Earn XP for:</strong></p>
+                        <ul class="mb-3">
+                            <li>Successful uploads: 5-20 XP</li>
+                            <li>High-quality ratings: Bonus XP</li>
+                            <li>Original content: Premium rewards</li>
+                            <li>Detailed descriptions: Extra points</li>
+                        </ul>
+                        <p class="text-muted">XP can be converted to rewards and withdrawal requests.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            {% if current_user.uploads %}
+            <div class="card">
+                <div class="card-header">
+                    <h6><i class="fas fa-history me-2"></i>Recent Uploads</h6>
+                </div>
+                <div class="card-body">
+                    {% for upload in current_user.uploads[:3] %}
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div>
+                            <small class="fw-bold">{{ upload.original_filename[:20] }}...</small><br>
+                            <small class="text-muted">{{ upload.upload_date.strftime('%Y-%m-%d') }}</small>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge bg-{{ 'success' if upload.status == 'approved' else 'warning' if upload.status == 'pending' else 'danger' }}">
+                                {{ upload.status.title() }}
+                            </span><br>
+                            <small class="text-muted">{{ upload.xp_awarded }} XP</small>
+                        </div>
+                    </div>
+                    {% if not loop.last %}<hr class="my-2">{% endif %}
+                    {% endfor %}
+                    
+                    {% if current_user.uploads|length > 3 %}
+                    <div class="text-center mt-3">
+                        <a href="{{ url_for('main.dashboard') }}" class="btn btn-sm btn-outline-primary">
+                            View All Uploads
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('file');
+    const uploadBtn = document.getElementById('upload-btn');
+    const finalConsent = document.getElementById('final_consent');
+    
+    function toggleUploadButton() {
+        const fileSelected = fileInput.files.length > 0;
+        const consentGiven = finalConsent.checked;
+        uploadBtn.disabled = !(fileSelected && consentGiven);
+    }
+    
+    fileInput.addEventListener('change', toggleUploadButton);
+    finalConsent.addEventListener('change', toggleUploadButton);
+    
+    // Initialize
+    toggleUploadButton();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+
+{% block title %}Rate Alpha Nex - Alpha Nex{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h3><i class="fas fa-star me-2 text-primary"></i>Rate Alpha Nex</h3>
+                    <p class="text-muted mb-0">Help us improve by sharing your experience with our platform</p>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="needs-validation" novalidate>
+                        <!-- Star Rating -->
+                        <div class="mb-4">
+                            <label class="form-label"><strong>Overall Rating</strong></label>
+                            <p class="text-muted small mb-3">How would you rate your overall experience with Alpha Nex?</p>
+                            
+                            <div class="text-center mb-3">
+                                <div class="star-rating">
+                                    <i class="fas fa-star star" data-rating="1"></i>
+                                    <i class="fas fa-star star" data-rating="2"></i>
+                                    <i class="fas fa-star star" data-rating="3"></i>
+                                    <i class="fas fa-star star" data-rating="4"></i>
+                                    <i class="fas fa-star star" data-rating="5"></i>
+                                </div>
+                                <input type="hidden" id="rating-value" name="rating" required>
+                                <div class="invalid-feedback d-block" id="rating-feedback" style="display: none !important;">
+                                    Please select a rating.
+                                </div>
+                            </div>
+                            
+                            <div class="text-center">
+                                <small class="text-muted">
+                                    <span class="rating-text">Click the stars to rate</span>
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Detailed Feedback -->
+                        <div class="mb-4">
+                            <label for="feedback" class="form-label"><strong>Your Feedback</strong></label>
+                            <p class="text-muted small mb-3">
+                                Tell us what you love about Alpha Nex and how we can improve. 
+                                Your feedback helps us build a better platform for everyone.
+                            </p>
+                            
+                            <textarea class="form-control" id="feedback" name="feedback" rows="6"
+                                      placeholder="Share your thoughts about:
+- The upload and review process
+- Platform usability and design
+- Community features and interaction
+- Reward system and XP earning
+- Overall satisfaction and suggestions for improvement
+
+Your feedback is valuable and helps us enhance the Alpha Nex experience."></textarea>
+                            
+                            <div class="form-text">
+                                Optional but appreciated. Detailed feedback helps us prioritize improvements.
+                            </div>
+                        </div>
+
+                        <!-- Rating Categories -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="text-primary">What We'd Love to Hear About:</h6>
+                                        <ul class="small mb-0">
+                                            <li>Ease of uploading content</li>
+                                            <li>Quality of review system</li>
+                                            <li>User interface and navigation</li>
+                                            <li>Reward and XP system</li>
+                                            <li>Community interaction</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="text-warning">Help Us Improve:</h6>
+                                        <ul class="small mb-0">
+                                            <li>Technical issues or bugs</li>
+                                            <li>Confusing features or processes</li>
+                                            <li>Missing functionality</li>
+                                            <li>Performance concerns</li>
+                                            <li>Suggestions for new features</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- User Context -->
+                        <div class="alert alert-info mb-4">
+                            <h6 class="alert-heading"><i class="fas fa-user me-2"></i>Your Alpha Nex Journey</h6>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <strong>Role:</strong> {{ current_user.role.title() }}<br>
+                                    <strong>Member Since:</strong> {{ current_user.created_at.strftime('%B %Y') }}
+                                </div>
+                                <div class="col-md-4">
+                                    <strong>Total XP:</strong> {{ current_user.xp }}<br>
+                                    {% if current_user.role == 'uploader' %}
+                                    <strong>Uploads:</strong> {{ current_user.uploads|length }}
+                                    {% else %}
+                                    <strong>Reviews:</strong> {{ current_user.reviews|length }}
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-4">
+                                    <strong>Account Status:</strong> 
+                                    <span class="badge bg-success">{{ 'Verified' if current_user.is_verified else 'Unverified' }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Privacy Notice -->
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="privacy_consent" name="privacy_consent" required>
+                                <label class="form-check-label" for="privacy_consent">
+                                    I understand that my feedback may be used to improve Alpha Nex and may be shared 
+                                    with our development team. Personal information will be handled according to our 
+                                    <a href="{{ url_for('main.privacy') }}" target="_blank" class="text-primary">Privacy Policy</a>.
+                                </label>
+                                <div class="invalid-feedback">
+                                    Please acknowledge our privacy practices.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary me-3">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg" id="submit-rating-btn" disabled>
+                                <i class="fas fa-paper-plane me-2"></i>Submit Rating
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Thank You Message (Hidden initially) -->
+            <div class="card mt-4 d-none" id="thank-you-card">
+                <div class="card-body text-center">
+                    <i class="fas fa-heart fa-3x text-danger mb-3"></i>
+                    <h4>Thank You for Your Feedback!</h4>
+                    <p class="text-muted">
+                        Your rating and feedback help us continue improving Alpha Nex. 
+                        We appreciate your contribution to our community!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.star-rating {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.star {
+    color: #6c757d;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    margin: 0 5px;
+}
+
+.star:hover,
+.star.hover {
+    color: #ffc107;
+}
+
+.star.active {
+    color: #ffc107;
+}
+
+.rating-text {
+    transition: all 0.3s ease;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const stars = document.querySelectorAll('.star');
+    const ratingInput = document.getElementById('rating-value');
+    const ratingText = document.querySelector('.rating-text');
+    const submitBtn = document.getElementById('submit-rating-btn');
+    const privacyConsent = document.getElementById('privacy_consent');
+    const ratingFeedback = document.getElementById('rating-feedback');
+
+    const ratingTexts = {
+        1: "Poor - Needs significant improvement",
+        2: "Below Average - Some issues to address", 
+        3: "Average - Acceptable experience",
+        4: "Good - Enjoyable with minor issues",
+        5: "Excellent - Outstanding experience!"
+    };
+
+    // Star rating functionality
+    stars.forEach((star, index) => {
+        star.addEventListener('click', function() {
+            const rating = index + 1;
+            
+            // Update hidden input
+            ratingInput.value = rating;
+            
+            // Update visual state
+            updateStars(rating);
+            
+            // Update text
+            ratingText.textContent = ratingTexts[rating];
+            ratingText.className = 'rating-text text-' + (rating <= 2 ? 'danger' : rating === 3 ? 'warning' : 'success');
+            
+            // Hide error message
+            ratingFeedback.style.display = 'none';
+            
+            // Update submit button
+            updateSubmitButton();
+        });
+        
+        star.addEventListener('mouseenter', function() {
+            const rating = index + 1;
+            updateStars(rating, true);
+        });
+    });
+    
+    document.querySelector('.star-rating').addEventListener('mouseleave', function() {
+        const currentRating = parseInt(ratingInput.value) || 0;
+        updateStars(currentRating);
+    });
+
+    function updateStars(rating, isHover = false) {
+        stars.forEach((star, index) => {
+            star.classList.remove('active', 'hover');
+            if (index < rating) {
+                star.classList.add(isHover ? 'hover' : 'active');
+            }
+        });
+    }
+
+    function updateSubmitButton() {
+        const ratingSelected = ratingInput.value !== '';
+        const privacyAccepted = privacyConsent.checked;
+        submitBtn.disabled = !(ratingSelected && privacyAccepted);
+    }
+
+    privacyConsent.addEventListener('change', updateSubmitButton);
+
+    // Form validation
+    const form = document.querySelector('.needs-validation');
+    form.addEventListener('submit', function(event) {
+        if (!ratingInput.value) {
+            ratingFeedback.style.display = 'block';
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            // Show thank you message after successful submission
+            setTimeout(() => {
+                document.getElementById('thank-you-card').classList.remove('d-none');
+            }, 1000);
+        }
+        
+        form.classList.add('was-validated');
+    });
+});
+</script>
+{% endblock %}

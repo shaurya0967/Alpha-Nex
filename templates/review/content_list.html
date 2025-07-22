@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+
+{% block title %}Content Review - Alpha Nex{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Page Header -->
+    <div class="dashboard-header">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2><i class="fas fa-search me-2 text-primary"></i>Content Review</h2>
+                <p class="text-muted mb-0">Review uploaded content to help maintain platform quality and earn XP.</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Filters and Info Sidebar -->
+        <div class="col-lg-3">
+            <!-- Review Statistics -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6><i class="fas fa-chart-bar me-2"></i>Review Stats</h6>
+                </div>
+                <div class="card-body">
+                    <div class="stats-card mb-3">
+                        <div class="stats-number">{{ uploads|length }}</div>
+                        <div class="stats-label">Available for Review</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="stats-card">
+                                <div class="stats-number">{{ current_user.reviews|length }}</div>
+                                <div class="stats-label">Your Reviews</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stats-card">
+                                <div class="stats-number">{{ current_user.xp }}</div>
+                                <div class="stats-label">Total XP</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6><i class="fas fa-filter me-2"></i>Filter Content</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="file-type-filter" class="form-label">File Type</label>
+                        <select class="form-select form-select-sm" id="file-type-filter">
+                            <option value="">All Types</option>
+                            <option value="mp4">Video (MP4)</option>
+                            <option value="avi">Video (AVI)</option>
+                            <option value="mov">Video (MOV)</option>
+                            <option value="mp3">Audio (MP3)</option>
+                            <option value="wav">Audio (WAV)</option>
+                            <option value="pdf">Document (PDF)</option>
+                            <option value="txt">Text (TXT)</option>
+                            <option value="py">Code (Python)</option>
+                            <option value="js">Code (JavaScript)</option>
+                            <option value="html">Code (HTML)</option>
+                            <option value="css">Code (CSS)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="size-filter" class="form-label">File Size</label>
+                        <select class="form-select form-select-sm" id="size-filter">
+                            <option value="">All Sizes</option>
+                            <option value="small">Small (< 10MB)</option>
+                            <option value="medium">Medium (10-100MB)</option>
+                            <option value="large">Large (> 100MB)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="search-content" class="form-label">Search</label>
+                        <input type="text" class="form-control form-control-sm" id="search-content" placeholder="Search filenames...">
+                    </div>
+                    
+                    <button class="btn btn-outline-primary btn-sm w-100" onclick="clearFilters()">
+                        <i class="fas fa-times me-2"></i>Clear Filters
+                    </button>
+                </div>
+            </div>
+
+            <!-- Review Guidelines -->
+            <div class="card">
+                <div class="card-header">
+                    <h6><i class="fas fa-info-circle me-2"></i>Quick Guidelines</h6>
+                </div>
+                <div class="card-body">
+                    <div class="small">
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center mb-1">
+                                <span class="badge bg-success me-2">Good</span>
+                                <strong>High quality, original</strong>
+                            </div>
+                            <p class="text-muted mb-0">Rate as Good if content is original, high quality, and suitable for AI training.</p>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center mb-1">
+                                <span class="badge bg-warning me-2">Fake</span>
+                                <strong>Suspicious, generated</strong>
+                            </div>
+                            <p class="text-muted mb-0">Rate as Fake if content appears artificially generated or deceptive.</p>
+                        </div>
+                        
+                        <div class="mb-0">
+                            <div class="d-flex align-items-center mb-1">
+                                <span class="badge bg-danger me-2">Poor</span>
+                                <strong>Low quality, unsuitable</strong>
+                            </div>
+                            <p class="text-muted mb-0">Rate as Poor if content has technical issues or violates policies.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content List -->
+        <div class="col-lg-9">
+            {% if uploads %}
+                <div class="row" id="content-grid">
+                    {% for upload in uploads %}
+                    <div class="col-lg-6 col-xl-4 mb-4 content-item" 
+                         data-type="{{ upload.file_type }}" 
+                         data-size="{{ upload.file_size }}"
+                         data-filename="{{ upload.original_filename.lower() }}">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0 text-truncate">{{ upload.original_filename }}</h6>
+                                    <span class="badge bg-secondary">{{ upload.file_type.upper() }}</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <div class="row text-center">
+                                        <div class="col-6">
+                                            <small class="text-muted">Size</small><br>
+                                            <strong>{{ "%.1f"|format(upload.file_size / (1024*1024)) }} MB</strong>
+                                        </div>
+                                        <div class="col-6">
+                                            <small class="text-muted">Uploaded</small><br>
+                                            <strong>{{ upload.upload_date.strftime('%m/%d') }}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <small class="text-muted">Uploader:</small>
+                                    <strong>{{ upload.uploader.username }}</strong>
+                                </div>
+                                
+                                {% if upload.description %}
+                                <div class="mb-3">
+                                    <small class="text-muted">Description:</small>
+                                    <p class="small">{{ upload.description[:100] }}{% if upload.description|length > 100 %}...{% endif %}</p>
+                                </div>
+                                {% endif %}
+                                
+                                <!-- File Type Preview Icon -->
+                                <div class="text-center mb-3">
+                                    {% set file_type = upload.file_type.lower() %}
+                                    {% if file_type in ['mp4', 'avi', 'mov'] %}
+                                        <i class="fas fa-video fa-3x text-primary"></i>
+                                    {% elif file_type in ['mp3', 'wav'] %}
+                                        <i class="fas fa-music fa-3x text-success"></i>
+                                    {% elif file_type == 'pdf' %}
+                                        <i class="fas fa-file-pdf fa-3x text-danger"></i>
+                                    {% elif file_type == 'txt' %}
+                                        <i class="fas fa-file-alt fa-3x text-info"></i>
+                                    {% else %}
+                                        <i class="fas fa-code fa-3x text-warning"></i>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="d-grid">
+                                    <a href="{{ url_for('review.review_form', upload_id=upload.id) }}" 
+                                       class="btn btn-primary">
+                                        <i class="fas fa-star me-2"></i>Review Content
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Load More Button (if needed) -->
+                {% if uploads|length >= 20 %}
+                <div class="text-center mt-4">
+                    <button class="btn btn-outline-primary" onclick="loadMoreContent()">
+                        <i class="fas fa-chevron-down me-2"></i>Load More Content
+                    </button>
+                </div>
+                {% endif %}
+            {% else %}
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
+                        <h4>All Caught Up!</h4>
+                        <p class="text-muted mb-4">
+                            There's no new content to review right now. 
+                            Check back later or encourage users to upload more content!
+                        </p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">
+                                <i class="fas fa-tachometer-alt me-2"></i>Back to Dashboard
+                            </a>
+                            <a href="{{ url_for('main.rate_website') }}" class="btn btn-outline-primary">
+                                <i class="fas fa-star me-2"></i>Rate Alpha Nex
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileTypeFilter = document.getElementById('file-type-filter');
+    const sizeFilter = document.getElementById('size-filter');
+    const searchInput = document.getElementById('search-content');
+    const contentItems = document.querySelectorAll('.content-item');
+
+    function applyFilters() {
+        const fileType = fileTypeFilter.value.toLowerCase();
+        const sizeFilter_val = sizeFilter.value;
+        const searchTerm = searchInput.value.toLowerCase();
+
+        contentItems.forEach(item => {
+            let show = true;
+
+            // File type filter
+            if (fileType && !item.dataset.type.toLowerCase().includes(fileType)) {
+                show = false;
+            }
+
+            // Size filter
+            if (sizeFilter_val) {
+                const size = parseInt(item.dataset.size);
+                const sizeMB = size / (1024 * 1024);
+                
+                if (sizeFilter_val === 'small' && sizeMB >= 10) show = false;
+                if (sizeFilter_val === 'medium' && (sizeMB < 10 || sizeMB > 100)) show = false;
+                if (sizeFilter_val === 'large' && sizeMB <= 100) show = false;
+            }
+
+            // Search filter
+            if (searchTerm && !item.dataset.filename.includes(searchTerm)) {
+                show = false;
+            }
+
+            item.style.display = show ? 'block' : 'none';
+        });
+    }
+
+    fileTypeFilter.addEventListener('change', applyFilters);
+    sizeFilter.addEventListener('change', applyFilters);
+    searchInput.addEventListener('input', applyFilters);
+
+    window.clearFilters = function() {
+        fileTypeFilter.value = '';
+        sizeFilter.value = '';
+        searchInput.value = '';
+        applyFilters();
+    };
+
+    window.loadMoreContent = function() {
+        // This would implement pagination in a real application
+        alert('Pagination would be implemented here in a production app.');
+    };
+});
+</script>
+{% endblock %}

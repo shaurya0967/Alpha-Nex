@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Email - Alpha Nex{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h3><i class="fas fa-envelope-open me-2 text-warning"></i>Email Verification Required</h3>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-envelope fa-4x text-primary mb-3"></i>
+                        <h5>Check Your Email</h5>
+                        <p class="text-muted">
+                            We've sent a verification link to <strong>{{ current_user.email }}</strong>. 
+                            Please click the link in the email to verify your account.
+                        </p>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Next Steps:</strong>
+                        <ol class="text-start mt-2 mb-0">
+                            <li>Check your email inbox (and spam folder)</li>
+                            <li>Click the verification link</li>
+                            <li>Choose your role (Uploader or Reviewer)</li>
+                            <li>Start contributing to Alpha Nex!</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <p class="text-muted">Didn't receive the email?</p>
+                        <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-primary">
+                            <i class="fas fa-sign-out-alt me-2"></i>Logout and Try Again
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Legal Notice -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h6 class="text-primary"><i class="fas fa-shield-alt me-2"></i>While You Wait</h6>
+                    <p class="text-muted mb-3">
+                        Take a moment to review our policies if you haven't already:
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="{{ url_for('main.terms') }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-file-contract me-1"></i>Terms of Service
+                        </a>
+                        <a href="{{ url_for('main.privacy') }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-shield-alt me-1"></i>Privacy Policy
+                        </a>
+                        <a href="{{ url_for('main.content_policy') }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-gavel me-1"></i>Content Policy
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

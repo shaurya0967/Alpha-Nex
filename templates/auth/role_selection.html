@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block title %}Choose Your Role - Alpha Nex{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <h2><i class="fas fa-user-cog me-2 text-primary"></i>Choose Your Role</h2>
+                <p class="text-muted">Select how you'd like to contribute to Alpha Nex. You can change this later.</p>
+            </div>
+            
+            <form method="POST">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 role-option" onclick="selectRole('uploader')">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i class="fas fa-upload fa-4x text-primary"></i>
+                                </div>
+                                <h4>Uploader</h4>
+                                <p class="text-muted">Share your content to help train AI systems</p>
+                                
+                                <div class="features-list text-start">
+                                    <h6 class="text-primary">What you can do:</h6>
+                                    <ul class="list-unstyled">
+                                        <li><i class="fas fa-check text-success me-2"></i>Upload videos, audio, documents, code</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>500MB daily upload limit</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Earn XP for quality content</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Track upload performance</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Request withdrawals</li>
+                                    </ul>
+                                    
+                                    <h6 class="text-warning mt-3">Requirements:</h6>
+                                    <ul class="list-unstyled">
+                                        <li><i class="fas fa-exclamation-triangle text-warning me-2"></i>Must own all uploaded content</li>
+                                        <li><i class="fas fa-exclamation-triangle text-warning me-2"></i>Consent to AI training use</li>
+                                        <li><i class="fas fa-exclamation-triangle text-warning me-2"></i>Follow content policies</li>
+                                        <li><i class="fas fa-exclamation-triangle text-warning me-2"></i>Cannot review own uploads</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="form-check mt-3">
+                                    <input class="form-check-input" type="radio" name="role" value="uploader" id="role_uploader" required>
+                                    <label class="form-check-label fw-bold" for="role_uploader">
+                                        Select Uploader Role
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 role-option" onclick="selectRole('reviewer')">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i class="fas fa-star fa-4x text-primary"></i>
+                                </div>
+                                <h4>Reviewer</h4>
+                                <p class="text-muted">Help maintain quality by reviewing content</p>
+                                
+                                <div class="features-list text-start">
+                                    <h6 class="text-primary">What you can do:</h6>
+                                    <ul class="list-unstyled">
+                                        <li><i class="fas fa-check text-success me-2"></i>Review uploaded content</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Rate as Good/Fake/Poor</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Provide detailed feedback</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Earn XP for quality reviews</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Access leaderboards</li>
+                                    </ul>
+                                    
+                                    <h6 class="text-warning mt-3">Requirements:</h6>
+                                    <ul class="list-unstyled">
+                                        <li><i class="fas fa-exclamation-triangle text-warning me-2"></i>Provide detailed descriptions (50+ chars)</li>
+                                        <li><i class="fas fa-exclamation-triangle text-warning me-2"></i>Fair and honest reviews</li>
+                                        <li><i class="fas fa-exclamation-triangle text-warning me-2"></i>Cannot review own content</li>
+                                        <li><i class="fas fa-exclamation-triangle text-warning me-2"></i>Follow review guidelines</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="form-check mt-3">
+                                    <input class="form-check-input" type="radio" name="role" value="reviewer" id="role_reviewer" required>
+                                    <label class="form-check-label fw-bold" for="role_reviewer">
+                                        Select Reviewer Role
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Legal Notice -->
+                <div class="alert alert-info mt-4">
+                    <h6 class="text-primary"><i class="fas fa-info-circle me-2"></i>Important Information</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong>Role Changes:</strong></p>
+                            <ul class="small mb-0">
+                                <li>You can change your role later through your dashboard</li>
+                                <li>Some users may qualify for both roles over time</li>
+                                <li>Admin approval may be required for role changes</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong>Legal Compliance:</strong></p>
+                            <ul class="small mb-0">
+                                <li>All activities are governed by our Terms of Service</li>
+                                <li>Content must comply with our Content Policy</li>
+                                <li>Privacy rights are protected under our Privacy Policy</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-arrow-right me-2"></i>Continue to Dashboard
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.role-option {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.role-option:hover {
+    border-color: var(--accent-color);
+    transform: translateY(-5px);
+}
+
+.role-option.selected {
+    border-color: var(--accent-color);
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+.features-list {
+    text-align: left !important;
+}
+</style>
+
+<script>
+function selectRole(role) {
+    // Remove selected class from all cards
+    document.querySelectorAll('.role-option').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Add selected class to clicked card
+    event.currentTarget.classList.add('selected');
+    
+    // Select the radio button
+    document.getElementById('role_' + role).checked = true;
+}
+
+// Add click handlers for radio buttons
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('input[name="role"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            document.querySelectorAll('.role-option').forEach(card => {
+                card.classList.remove('selected');
+            });
+            this.closest('.role-option').classList.add('selected');
+        });
+    });
+});
+</script>
+{% endblock %}

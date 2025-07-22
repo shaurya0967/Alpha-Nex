@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Alpha Nex{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h3><i class="fas fa-sign-in-alt me-2"></i>Login to Alpha Nex</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                            <div class="invalid-feedback">
+                                Please provide a valid email address.
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                            <div class="invalid-feedback">
+                                Please provide your password.
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-sign-in-alt me-2"></i>Login
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <p class="mb-0">Don't have an account? 
+                        <a href="{{ url_for('auth.register') }}" class="text-primary">Register here</a>
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Legal Notice -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h6 class="text-primary"><i class="fas fa-info-circle me-2"></i>Before You Continue</h6>
+                    <p class="text-muted small mb-2">
+                        By logging in, you acknowledge that you have read and agree to our:
+                    </p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="{{ url_for('main.terms') }}" class="btn btn-sm btn-outline-primary">Terms of Service</a>
+                        <a href="{{ url_for('main.privacy') }}" class="btn btn-sm btn-outline-primary">Privacy Policy</a>
+                        <a href="{{ url_for('main.content_policy') }}" class="btn btn-sm btn-outline-primary">Content Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

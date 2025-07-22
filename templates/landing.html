@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Alpha Nex - AI Training Data Platform{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h1 class="hero-title">
+                    <i class="fas fa-cube me-3"></i>Alpha Nex
+                </h1>
+                <p class="hero-subtitle">
+                    The premier platform for AI training data collection and quality assurance. 
+                    Upload your content, review others' submissions, and earn rewards for contributing to the future of AI.
+                </p>
+                <div class="mt-4">
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg me-3">
+                        <i class="fas fa-user-plus me-2"></i>Get Started
+                    </a>
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>Login
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 class="text-primary">How Alpha Nex Works</h2>
+                <p class="text-muted">Join our community of data contributors and quality reviewers</p>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <h4>Upload Content</h4>
+                    <p class="text-muted">
+                        Share your videos, audio files, documents, and code. 
+                        All uploads are subject to our comprehensive legal agreements and quality standards.
+                    </p>
+                    <ul class="list-unstyled text-start">
+                        <li><i class="fas fa-check text-success me-2"></i>Video, Audio, PDF, Text, Code</li>
+                        <li><i class="fas fa-check text-success me-2"></i>500MB daily upload limit</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Duplicate detection</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Legal consent tracking</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>Review & Rate</h4>
+                    <p class="text-muted">
+                        Help maintain quality by reviewing content from other users. 
+                        Provide detailed feedback and earn XP for thorough reviews.
+                    </p>
+                    <ul class="list-unstyled text-start">
+                        <li><i class="fas fa-check text-success me-2"></i>Good/Fake/Poor ratings</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Required detailed descriptions</li>
+                        <li><i class="fas fa-check text-success me-2"></i>No self-reviewing allowed</li>
+                        <li><i class="fas fa-check text-success me-2"></i>XP rewards for quality reviews</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="feature-card text-center h-100">
+                    <div class="feature-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h4>Earn Rewards</h4>
+                    <p class="text-muted">
+                        Build your reputation and earn XP for quality contributions. 
+                        Track your progress and compete on our leaderboards.
+                    </p>
+                    <ul class="list-unstyled text-start">
+                        <li><i class="fas fa-check text-success me-2"></i>XP-based reward system</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Quality-based bonuses</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Leaderboard rankings</li>
+                        <li><i class="fas fa-check text-success me-2"></i>Withdrawal requests</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Legal Compliance Section -->
+<section class="py-5 bg-dark">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-4">
+                <h2 class="text-primary">Legal Compliance & Transparency</h2>
+                <p class="text-muted">We take legal compliance seriously. Review our policies before getting started.</p>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-file-contract fa-3x text-primary mb-3"></i>
+                        <h5>Terms of Service</h5>
+                        <p class="text-muted">Comprehensive terms governing platform usage, user responsibilities, and service availability.</p>
+                        <a href="{{ url_for('main.terms') }}" class="btn btn-outline-primary">Read Terms</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                        <h5>Privacy Policy</h5>
+                        <p class="text-muted">Detailed information about data collection, processing, storage, and your privacy rights.</p>
+                        <a href="{{ url_for('main.privacy') }}" class="btn btn-outline-primary">Read Privacy</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-gavel fa-3x text-primary mb-3"></i>
+                        <h5>Content Policy</h5>
+                        <p class="text-muted">Guidelines for acceptable content, intellectual property rights, and content moderation policies.</p>
+                        <a href="{{ url_for('main.content_policy') }}" class="btn btn-outline-primary">Read Policy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2>Ready to Start Contributing?</h2>
+                <p class="text-muted mb-4">
+                    Join Alpha Nex today and become part of the AI training data revolution. 
+                    Your contributions help build better AI systems for everyone.
+                </p>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-rocket me-2"></i>Join Alpha Nex Now
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

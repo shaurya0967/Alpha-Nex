@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+
+{% block title %}Reviewer Dashboard - Alpha Nex{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2><i class="fas fa-star me-2 text-primary"></i>Reviewer Dashboard</h2>
+                <p class="text-muted mb-0">Welcome back, {{ current_user.username }}! Help maintain quality by reviewing content.</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="{{ url_for('review.content_list') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-search me-2"></i>Review Content
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Sidebar - Stats and Information -->
+        <div class="col-lg-3">
+            <!-- User Stats -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6><i class="fas fa-chart-bar me-2"></i>Your Statistics</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-number">{{ current_user.xp }}</div>
+                                <div class="stats-label">Total XP</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stats-card">
+                                <div class="stats-number">{{ current_user.reviews|length }}</div>
+                                <div class="stats-label">Reviews Made</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stats-card">
+                                <div class="stats-number">{{ current_user.reviews|sum(attribute='xp_awarded') }}</div>
+                                <div class="stats-label">XP from Reviews</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Quality Breakdown -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6><i class="fas fa-chart-pie me-2"></i>Review Breakdown</h6>
+                </div>
+                <div class="card-body">
+                    {% set good_reviews = current_user.reviews|selectattr('rating', 'equalto', 'good')|list|length %}
+                    {% set fake_reviews = current_user.reviews|selectattr('rating', 'equalto', 'fake')|list|length %}
+                    {% set poor_reviews = current_user.reviews|selectattr('rating', 'equalto', 'poor')|list|length %}
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-success">Good</span>
+                            <span>{{ good_reviews }}</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-success" style="width: {{ (good_reviews / (current_user.reviews|length or 1) * 100) }}%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-warning">Fake</span>
+                            <span>{{ fake_reviews }}</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-warning" style="width: {{ (fake_reviews / (current_user.reviews|length or 1) * 100) }}%"></div>
+                        </div>
+                    </div>
+                    <div class="mb-0">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-danger">Poor</span>
+                            <span>{{ poor_reviews }}</span>
+                        </div>
+                        <div class="progress" style="height: 8px;">
+                            <div class="progress-bar bg-danger" style="width: {{ (poor_reviews / (current_user.reviews|length or 1) * 100) }}%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Available Content -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6><i class="fas fa-clipboard-list me-2"></i>Content to Review</h6>
+                </div>
+                <div class="card-body">
+                    <div class="text-center">
+                        <h4 class="text-primary">{{ uploads|length }}</h4>
+                        <p class="text-muted">Items awaiting review</p>
+                        <a href="{{ url_for('review.content_list') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-arrow-right me-2"></i>Start Reviewing
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Guidelines -->
+            <div class="card">
+                <div class="card-header">
+                    <h6><i class="fas fa-lightbulb me-2"></i>Review Guidelines</h6>
+                </div>
+                <div class="card-body">
+                    <div class="small">
+                        <p class="mb-2"><strong>Rate as "Good" if:</strong></p>
+                        <ul class="mb-3">
+                            <li>High quality and original</li>
+                            <li>Appropriate for AI training</li>
+                            <li>Follows content policies</li>
+                            <li>Technically sound</li>
+                        </ul>
+                        <p class="mb-2"><strong>Rate as "Fake" if:</strong></p>
+                        <ul class="mb-3">
+                            <li>Artificially generated</li>
+                            <li>Misleading or deceptive</li>
+                            <li>Improperly claimed ownership</li>
+                        </ul>
+                        <p class="mb-2"><strong>Rate as "Poor" if:</strong></p>
+                        <ul class="mb-0">
+                            <li>Low technical quality</li>
+                            <li>Not suitable for AI training</li>
+                            <li>Violates content policies</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="col-lg-9">
+            <!-- Recent Reviews -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-history me-2"></i>Your Recent Reviews</h5>
+                    <div>
+                        <input type="text" class="form-control form-control-sm" id="search" placeholder="Search reviews..." style="width: 200px;">
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if current_user.reviews %}
+                        <div class="table-responsive">
+                            <table class="table table-dark table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Content</th>
+                                        <th>Your Rating</th>
+                                        <th>Your Review</th>
+                                        <th>XP Earned</th>
+                                        <th>Review Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for review in current_user.reviews|sort(attribute='created_at', reverse=true) %}
+                                    <tr class="searchable">
+                                        <td>
+                                            <strong>{{ review.upload.original_filename }}</strong>
+                                            <br><small class="text-muted">by {{ review.upload.uploader.username }}</small>
+                                            <br><span class="badge bg-secondary">{{ review.upload.file_type.upper() }}</span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-{{ 'success' if review.rating == 'good' else 'warning' if review.rating == 'fake' else 'danger' }}">
+                                                {{ review.rating.title() }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div style="max-width: 300px;">
+                                                {{ review.description[:100] }}{% if review.description|length > 100 %}...{% endif %}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="text-success fw-bold">{{ review.xp_awarded }} XP</span>
+                                        </td>
+                                        <td>{{ review.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                        <td>
+                                            <button class="btn btn-outline-info btn-sm" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#reviewModal{{ review.id }}">
+                                                <i class="fas fa-eye me-1"></i>Details
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-star fa-3x text-muted mb-3"></i>
+                            <h5>No Reviews Yet</h5>
+                            <p class="text-muted mb-4">Start earning XP by reviewing content from other users!</p>
+                            <a href="{{ url_for('review.content_list') }}" class="btn btn-primary">
+                                <i class="fas fa-search me-2"></i>Find Content to Review
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Review Detail Modals -->
+{% for review in current_user.reviews %}
+<div class="modal fade" id="reviewModal{{ review.id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Review Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Content Information</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>File:</strong> {{ review.upload.original_filename }}</li>
+                            <li><strong>Type:</strong> {{ review.upload.file_type.upper() }}</li>
+                            <li><strong>Size:</strong> {{ "%.2f"|format(review.upload.file_size / (1024*1024)) }} MB</li>
+                            <li><strong>Uploader:</strong> {{ review.upload.uploader.username }}</li>
+                            <li><strong>Upload Date:</strong> {{ review.upload.upload_date.strftime('%Y-%m-%d %H:%M') }}</li>
+                        </ul>
+                        
+                        {% if review.upload.description %}
+                        <h6>Content Description</h6>
+                        <p class="text-muted">{{ review.upload.description }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Your Review</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>Rating:</strong> 
+                                <span class="badge bg-{{ 'success' if review.rating == 'good' else 'warning' if review.rating == 'fake' else 'danger' }}">
+                                    {{ review.rating.title() }}
+                                </span>
+                            </li>
+                            <li><strong>XP Earned:</strong> {{ review.xp_awarded }} XP</li>
+                            <li><strong>Review Date:</strong> {{ review.created_at.strftime('%Y-%m-%d %H:%M') }}</li>
+                        </ul>
+                        
+                        <h6>Your Description</h6>
+                        <p class="text-muted">{{ review.description }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="{{ url_for('upload.download_file', upload_id=review.upload.id) }}" 
+                   class="btn btn-outline-primary">
+                    <i class="fas fa-download me-1"></i>Download Content
+                </a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

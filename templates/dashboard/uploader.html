@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block title %}Uploader Dashboard - Alpha Nex{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Dashboard Header -->
+    <div class="dashboard-header">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h2><i class="fas fa-upload me-2 text-primary"></i>Uploader Dashboard</h2>
+                <p class="text-muted mb-0">Welcome back, {{ current_user.username }}! Share your content and earn rewards.</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="{{ url_for('upload.upload_form') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus me-2"></i>Upload Content
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Sidebar - Stats and Quick Actions -->
+        <div class="col-lg-3">
+            <!-- User Stats -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6><i class="fas fa-chart-bar me-2"></i>Your Statistics</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-number">{{ current_user.xp }}</div>
+                                <div class="stats-label">Total XP</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stats-card">
+                                <div class="stats-number">{{ uploads|length }}</div>
+                                <div class="stats-label">Total Uploads</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stats-card">
+                                <div class="stats-number">{{ uploads|selectattr('status', 'equalto', 'approved')|list|length }}</div>
+                                <div class="stats-label">Approved</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Daily Upload Limit -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6><i class="fas fa-chart-pie me-2"></i>Daily Upload Limit</h6>
+                </div>
+                <div class="card-body">
+                    {% set used_mb = current_user.daily_upload_size / (1024 * 1024) %}
+                    {% set remaining_mb = 500 - used_mb %}
+                    <div class="text-center mb-3">
+                        <h5 class="text-primary">{{ "%.1f"|format(remaining_mb) }} MB</h5>
+                        <small class="text-muted">Remaining today</small>
+                    </div>
+                    <div class="upload-progress">
+                        <div class="upload-progress-bar" style="width: {{ (used_mb / 500 * 100) }}%"></div>
+                    </div>
+                    <div class="d-flex justify-content-between small text-muted mt-2">
+                        <span>{{ "%.1f"|format(used_mb) }} MB used</span>
+                        <span>500 MB limit</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6><i class="fas fa-bolt me-2"></i>Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('upload.agreement') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-file-signature me-2"></i>Review Upload Agreement
+                        </a>
+                        <a href="{{ url_for('main.rate_website') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-star me-2"></i>Rate Alpha Nex
+                        </a>
+                        <a href="{{ url_for('main.content_policy') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-gavel me-2"></i>Content Guidelines
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Tips -->
+            <div class="card">
+                <div class="card-header">
+                    <h6><i class="fas fa-lightbulb me-2"></i>Pro Tips</h6>
+                </div>
+                <div class="card-body">
+                    <div class="small">
+                        <p class="mb-2"><strong>Maximize your XP:</strong></p>
+                        <ul class="mb-3">
+                            <li>Upload unique, original content</li>
+                            <li>Provide detailed descriptions</li>
+                            <li>Ensure high technical quality</li>
+                            <li>Follow content guidelines</li>
+                        </ul>
+                        <p class="text-muted mb-0">Quality content earns more XP and better ratings!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="col-lg-9">
+            <!-- Upload History -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5><i class="fas fa-history me-2"></i>Upload History</h5>
+                    <div>
+                        <input type="text" class="form-control form-control-sm" id="search" placeholder="Search uploads..." style="width: 200px;">
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if uploads %}
+                        <div class="table-responsive">
+                            <table class="table table-dark table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>File</th>
+                                        <th>Type</th>
+                                        <th>Size</th>
+                                        <th>Upload Date</th>
+                                        <th>Status</th>
+                                        <th>Reviews</th>
+                                        <th>XP Earned</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for upload in uploads %}
+                                    <tr class="searchable">
+                                        <td>
+                                            <strong>{{ upload.original_filename }}</strong>
+                                            {% if upload.description %}
+                                            <br><small class="text-muted">{{ upload.description[:50] }}{% if upload.description|length > 50 %}...{% endif %}</small>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">{{ upload.file_type.upper() }}</span>
+                                        </td>
+                                        <td>{{ "%.2f"|format(upload.file_size / (1024*1024)) }} MB</td>
+                                        <td>{{ upload.upload_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                                        <td>
+                                            {% if upload.status == 'approved' %}
+                                                <span class="badge bg-success">Approved</span>
+                                            {% elif upload.status == 'pending' %}
+                                                <span class="badge bg-warning">Pending Review</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Rejected</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% set review_counts = upload.review_counts %}
+                                            <div class="small">
+                                                <span class="text-success">Good: {{ review_counts.good }}</span><br>
+                                                <span class="text-warning">Fake: {{ review_counts.fake }}</span><br>
+                                                <span class="text-danger">Poor: {{ review_counts.poor }}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="text-success fw-bold">{{ upload.xp_awarded }} XP</span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group-vertical btn-group-sm">
+                                                <a href="{{ url_for('upload.download_file', upload_id=upload.id) }}" 
+                                                   class="btn btn-outline-primary btn-sm">
+                                                    <i class="fas fa-download me-1"></i>Download
+                                                </a>
+                                                {% if upload.reviews %}
+                                                <button class="btn btn-outline-info btn-sm" 
+                                                        data-bs-toggle="modal" 
+                                                        data-bs-target="#reviewsModal{{ upload.id }}">
+                                                    <i class="fas fa-eye me-1"></i>Reviews
+                                                </button>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-upload fa-3x text-muted mb-3"></i>
+                            <h5>No Uploads Yet</h5>
+                            <p class="text-muted mb-4">Start contributing to Alpha Nex by uploading your first content!</p>
+                            <a href="{{ url_for('upload.agreement') }}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Upload First Content
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Review Modals -->
+{% for upload in uploads %}
+{% if upload.reviews %}
+<div class="modal fade" id="reviewsModal{{ upload.id }}" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reviews for {{ upload.original_filename }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                {% for review in upload.reviews %}
+                <div class="review-card mb-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <div>
+                            <strong>{{ review.reviewer.username }}</strong>
+                            <span class="badge bg-{{ 'success' if review.rating == 'good' else 'warning' if review.rating == 'fake' else 'danger' }} ms-2">
+                                {{ review.rating.title() }}
+                            </span>
+                        </div>
+                        <small class="text-muted">{{ review.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                    </div>
+                    <p class="mb-0">{{ review.description }}</p>
+                </div>
+                {% if not loop.last %}<hr>{% endif %}
+                {% endfor %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+{% endblock %}
