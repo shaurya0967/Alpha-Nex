@@ -62,18 +62,18 @@ class Upload(db.Model):
     # Relationships
     reviews = db.relationship('Review', backref='upload', lazy=True, cascade='all, delete-orphan')
     
-    @property
-    def average_rating(self):
-        if not self.reviews:
+    def get_average_rating(self):
+        reviews_list = db.session.query(Review).filter_by(upload_id=self.id).all()
+        if not reviews_list:
             return None
-        ratings = [r.rating_value for r in self.reviews]
+        ratings = [r.rating_value for r in reviews_list]
         return sum(ratings) / len(ratings)
     
-    @property
-    def review_counts(self):
-        good = sum(1 for r in self.reviews if r.rating == 'good')
-        fake = sum(1 for r in self.reviews if r.rating == 'fake')
-        poor = sum(1 for r in self.reviews if r.rating == 'poor')
+    def get_review_counts(self):
+        reviews_list = db.session.query(Review).filter_by(upload_id=self.id).all()
+        good = sum(1 for r in reviews_list if r.rating == 'good')
+        fake = sum(1 for r in reviews_list if r.rating == 'fake')
+        poor = sum(1 for r in reviews_list if r.rating == 'poor')
         return {'good': good, 'fake': fake, 'poor': poor}
 
 class Review(db.Model):

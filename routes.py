@@ -282,7 +282,7 @@ def upload_form():
             return render_template('upload/upload_form.html')
         
         # Save file
-        filename = secure_filename(file.filename)
+        filename = secure_filename(file.filename or "unknown")
         unique_filename = f"{secrets.token_hex(8)}_{filename}"
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
         
