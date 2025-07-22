@@ -30,9 +30,9 @@ def landing():
 @main_bp.route('/dashboard')
 @login_required
 def dashboard():
-    if not current_user.is_verified:
-        flash('Please verify your email first.', 'warning')
-        return redirect(url_for('auth.verify_email'))
+    # Check if user needs to select role first
+    if not current_user.role or current_user.role not in ['uploader', 'reviewer', 'admin']:
+        return redirect(url_for('auth.role_selection'))
     
     if current_user.role == 'uploader':
         uploads = Upload.query.filter_by(user_id=current_user.id).order_by(Upload.upload_date.desc()).all()
@@ -122,25 +122,18 @@ def register():
             flash('Username already taken.', 'error')
             return render_template('auth/register.html')
         
-        # Create user
+        # Create user with auto-verification (email service not configured)
         user = User(
             username=username,
             email=email,
-            verification_token=generate_verification_token()
+            is_verified=True  # Auto-verify since email service isn't configured
         )
         user.set_password(password)
         
         db.session.add(user)
         db.session.commit()
         
-        # Send verification email
-        try:
-            send_verification_email(user)
-            flash('Registration successful! Please check your email to verify your account.', 'success')
-        except Exception as e:
-            app.logger.error(f"Failed to send verification email: {e}")
-            flash('Registration successful! However, we could not send the verification email. Please contact support.', 'warning')
-        
+        flash('Registration successful! You can now log in and select your role.', 'success')
         return redirect(url_for('auth.login'))
     
     return render_template('auth/register.html')
@@ -169,10 +162,7 @@ def verify_token(token):
 @auth_bp.route('/role-selection', methods=['GET', 'POST'])
 @login_required
 def role_selection():
-    if not current_user.is_verified:
-        flash('Please verify your email first.', 'warning')
-        return redirect(url_for('auth.verify_email'))
-    
+    # Skip verification check since we're auto-verifying users
     if request.method == 'POST':
         role = request.form.get('role')
         if role in ['uploader', 'reviewer']:
@@ -196,10 +186,6 @@ def logout():
 @upload_bp.route('/agreement')
 @login_required
 def agreement():
-    if not current_user.is_verified:
-        flash('Please verify your email first.', 'warning')
-        return redirect(url_for('auth.verify_email'))
-    
     if current_user.role != 'uploader':
         flash('Only uploaders can access this page.', 'error')
         return redirect(url_for('main.dashboard'))
@@ -209,10 +195,6 @@ def agreement():
 @upload_bp.route('/consent', methods=['POST'])
 @login_required
 def consent():
-    if not current_user.is_verified:
-        flash('Please verify your email first.', 'warning')
-        return redirect(url_for('auth.verify_email'))
-    
     if current_user.role != 'uploader':
         flash('Only uploaders can access this page.', 'error')
         return redirect(url_for('main.dashboard'))
@@ -242,10 +224,6 @@ def consent():
 @upload_bp.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload_form():
-    if not current_user.is_verified:
-        flash('Please verify your email first.', 'warning')
-        return redirect(url_for('auth.verify_email'))
-    
     if current_user.role != 'uploader':
         flash('Only uploaders can access this page.', 'error')
         return redirect(url_for('main.dashboard'))
